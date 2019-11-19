@@ -29,71 +29,71 @@ class Map extends React.Component {
     this.TrajsCanvas = React.createRef();
     this.floorTrajs ={
       'f1' : {
-'origin':{ x: 350, y: 150},
-'trajs':[
-      [{ x: 350, y: 150 },{ x: 360, y: 70 }],
-      [{ x: 360, y: 70 },{ x: 400, y: 60 }], 
-      [{ x: 350, y: 150 },{ x: 400, y: 100 }],
-      [{x: 350, y: 150 },{ x: 420, y: 130 }],
-      [{ x: 350, y: 150 },{ x: 400, y: 160 }]
-      ]
-      },
-  'f2' : {
-'origin':{ x: 550, y: 150},
-'trajs':[
-      [{ x: 550, y: 150 },{ x: 520, y: 100 }],
-      [{ x: 550, y: 150 },{ x: 520, y: 210 }], 
-      [{ x: 550, y: 150 },{ x: 600, y: 100 }],
-      [{x: 550, y: 150 },{ x: 600, y: 130 }],
-      [{ x: 550, y: 150 },{ x: 600, y: 160 }]
-      ]
-      },
-  'f3' :{
-'origin':{ x: 350, y: 150},
-'trajs':[
-     [{ x: 350, y: 150 },{ x: 350, y: 70 }],
-      [{ x: 350, y: 70 },{ x: 320, y: 70 }], 
-      [{ x: 350, y: 150 },{ x: 300, y: 200 }],
-      [{x: 350, y: 150 },{ x: 380, y: 70 }],
-      [{ x: 350, y: 150 },{ x: 380, y: 170 }]
-      ]
-      },
-  'f3a' : {
-'origin':{ x: 550, y: 200},
-'trajs':[
-      [{ x: 550, y: 200 },{ x: 580, y: 130 }],
-      [{ x: 550, y: 200 },{ x: 600, y: 150 }], 
-      [{ x: 550, y: 200 },{ x: 580, y: 190 }],
-      // [{x: 550, y: 150 },{ x: 600, y: 130 }],
-      // [{ x: 550, y: 150 },{ x: 600, y: 160 }]
-      ]
-      },
-  'f4' : {
-'origin':{ x: 450, y: 150},
-'trajs':[
-      [{ x: 450, y: 150 },{ x: 510, y: 100 }],
-      [{x: 510, y: 100},{ x: 490, y: 70 }], 
-      [{x: 450, y: 150 },{ x: 500, y: 200 }],
-      [{x: 450, y: 150 },{ x: 390, y: 100 }],
-      [{ x: 390, y: 100 },{ x: 400, y: 70 }]
-      ]
-      },
-  'f5' : {
-'origin':{ x: 550, y: 150},
-'trajs':[
-      [{ x: 550, y: 150 },{ x: 410, y: 120 }],
-      [{ x: 410, y: 120 },{ x: 410, y: 90 }],
-      [{x: 550, y: 150 },{ x: 520, y: 100 }],
-      [{ x: 550, y: 150 },{ x: 600, y: 100 }]
-      ]
-      },
-    }
+      'origin':{ x: 350, y: 150},
+      'trajs':[
+            [{ x: 350, y: 150 },{ x: 360, y: 70 }],
+            [{ x: 360, y: 70 },{ x: 400, y: 60 }], 
+            [{ x: 350, y: 150 },{ x: 400, y: 100 }],
+            [{x: 350, y: 150 },{ x: 420, y: 130 }],
+            [{ x: 350, y: 150 },{ x: 400, y: 160 }]
+            ]
+            },
+        'f2' : {
+      'origin':{ x: 550, y: 150},
+      'trajs':[
+            [{ x: 550, y: 150 },{ x: 520, y: 100 }],
+            [{ x: 550, y: 150 },{ x: 520, y: 210 }], 
+            [{ x: 550, y: 150 },{ x: 600, y: 100 }],
+            [{x: 550, y: 150 },{ x: 600, y: 130 }],
+            [{ x: 550, y: 150 },{ x: 600, y: 160 }]
+            ]
+            },
+        'f3' :{
+      'origin':{ x: 350, y: 150},
+      'trajs':[
+           [{ x: 350, y: 150 },{ x: 350, y: 70 }],
+            [{ x: 350, y: 70 },{ x: 320, y: 70 }], 
+            [{ x: 350, y: 150 },{ x: 300, y: 200 }],
+            [{x: 350, y: 150 },{ x: 380, y: 70 }],
+            [{ x: 350, y: 150 },{ x: 380, y: 170 }]
+            ]
+            },
+        'f3a' : {
+      'origin':{ x: 550, y: 200},
+      'trajs':[
+            [{ x: 550, y: 200 },{ x: 580, y: 130 }],
+            [{ x: 550, y: 200 },{ x: 600, y: 150 }], 
+            [{ x: 550, y: 200 },{ x: 580, y: 190 }],
+            // [{x: 550, y: 150 },{ x: 600, y: 130 }],
+            // [{ x: 550, y: 150 },{ x: 600, y: 160 }]
+            ]
+            },
+        'f4' : {
+      'origin':{ x: 450, y: 150},
+      'trajs':[
+            [{ x: 450, y: 150 },{ x: 510, y: 100 }],
+            [{x: 510, y: 100},{ x: 490, y: 70 }], 
+            [{x: 450, y: 150 },{ x: 500, y: 200 }],
+            [{x: 450, y: 150 },{ x: 390, y: 100 }],
+            [{ x: 390, y: 100 },{ x: 400, y: 70 }]
+            ]
+            },
+        'f5' : {
+      'origin':{ x: 550, y: 150},
+      'trajs':[
+            [{ x: 550, y: 150 },{ x: 410, y: 120 }],
+            [{ x: 410, y: 120 },{ x: 410, y: 90 }],
+            [{x: 550, y: 150 },{ x: 520, y: 100 }],
+            [{ x: 550, y: 150 },{ x: 600, y: 100 }]
+            ]
+            },
+          }
   }
 
   componentDidMount(){
   	console.log(this.canvas)
 
-  	// this.drawBurns()
+  	this.drawBurns()
     this.drawTrajs()
   }
 
@@ -111,45 +111,67 @@ class Map extends React.Component {
 
   	let boundry = {
   		left : 50,
-  		width: 220,
+  		width: 400,
   		top : 25,
-  		height:95,
-  	}
+  		height:180,  
+    }
 
-  	// let percent = this.props.percent
-  	let percent = 1
+    let percent = this.props.percent
+    // let percent = 1
 
-  	for(let i = 0;i < 500;i++){
-  		let p = new Particle(ctx)
-	  	p.x = getRandomInt(boundry.left , (boundry.left + boundry.width) * percent)
-	  	p.y = getRandomInt(boundry.top ,  (boundry.top  + boundry.height) )
+    // 着火 中心点 
+    // let centerPercent = [0 , 0],
+    //   center = [boundry.left + boundry.width * centerPercent[0], 
+    //         boundry.top + boundry.height * centerPercent[1]]
+    let centerMap = {
+      'f1' : [90,30],
+      'f2' : [120,70],
+      'f3' : [160,40 ],
+      'f3a' : [120,60],
+      'f4' :  [100,70],
+      'f5' :  [110,30],
+    }
+    let center = centerMap[this.props.floor]
 
-	  	// console.log(p.x , p.y )
-	  	// p.draw()
-	  	particles.push(p)
-  	}
-  	ctx.globalCompositeOperation = "lighter";
+    // 蔓延范围
+    let xmin = center[0] - boundry.width * Math.sqrt(percent) / 2 , 
+      xmax = center[0] + boundry.width * Math.sqrt(percent) / 2 ,
+      ymin = center[1] - boundry.height * Math.sqrt(percent) / 2 ,
+      ymax = center[1] + boundry.height * Math.sqrt(percent) / 2 
 
-  	function update() {
-  		clear()
-  		particles.map((p)=>{
-  			p.r += 0.15;
-			p.a -= 0.015;
-			if(p.a < 0) {
-				p.r = Math.random() * 4;
-				p.a = Math.random();
-			}
-			p.draw()
-  		})
-  	}
-  	
-  	function clear() {
-		ctx.clearRect(0, 0, width, height);
-	}
+      xmin =  (xmin < boundry.left ) ?  boundry.left : xmin
+      ymin =  (ymin < boundry.top ) ?   boundry.top : ymin
+      xmax =  (xmax > (boundry.left+boundry.width)) ? (boundry.left+boundry.width) : xmax
+      ymax =  (ymax > (boundry.top+boundry.height)) ? (boundry.top+boundry.height) : ymax
 
+    // 火苗
+    for(let i = 0;i < 1000*percent;i++){
+      let p = new Particle(ctx)
+      p.x = getRandomInt(xmin , xmax)
+      p.y = getRandomInt(ymin , ymax )
+      particles.push(p)
+    }
+    ctx.globalCompositeOperation = "lighter";
 
-	let timeoutId = setTimeout(update, 1000 / 30);
-	this.setState({ timeoutId })
+    function update() {
+      clear()
+      particles.map((p)=>{
+        p.r += 0.15;
+      p.a -= 0.015;
+      if(p.a < 0) {
+        p.r = Math.random() * 4;
+        p.a = Math.random();
+      }
+      p.draw()
+      })
+    }
+    
+    function clear() {
+      ctx.clearRect(0, 0, width, height);
+    }
+    let timeoutId = setInterval(update, 1000 / 30);
+    this.setState({ timeoutId })
+
   };
   //canvas绘制逃生轨迹
   drawTrajs(){
@@ -209,8 +231,9 @@ class Map extends React.Component {
   render() {
     return (
       <div className='container'>
+        <h2 className='return-btn' onClick={this.props.return}> 返回 </h2>
         <img src={pics[ this.props.floor ] ||  pics['f1']}  className='image' />
-        // <canvas ref={this.canvas}/>
+        <canvas ref={this.canvas}/>
         <canvas ref={this.TrajsCanvas}/>
       </div>
     );

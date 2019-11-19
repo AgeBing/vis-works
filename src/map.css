@@ -17,3 +17,18 @@
 	width: 90%;
 	height: 90%;
 }
+
+.return-btn{
+	position: absolute;
+    top: 15px;
+    left: 15px;
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+    z-index: 999;
+    margin: 0;
+    font-size: 25px
+}
+.return-btn:hover{
+	font-size: 26px
+}

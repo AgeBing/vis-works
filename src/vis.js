@@ -15,6 +15,7 @@ import {
   Util
 } from "bizcharts";
 import DataSet from "@antv/data-set";
+import './vis.css';
 
 
 class Vis extends React.Component {
@@ -28,25 +29,13 @@ class Vis extends React.Component {
 
 
   componentWillMount(){
+    let self = this
+    this.setTime()
+    setInterval(self.setTime.bind(self), 60000);
+  }
 
-    let floors = ['f1','f2','f3','f3a','f4','f5']
-    let types  = ['上一时刻','新增区域']
-
-    let data = []
-
-    for(let i = 0;i < floors.length;i++){
-      for(let j = 0;j < types.length;j++){
-          data.push({
-            'floor' : floors[i],
-            'type'  : types[j],
-            'percent' : Math.round(Math.random() * 50)
-          })
-      }
-    }
-
-    this.setState({
-      data 
-    })
+  setTime(){
+    this.setState({curTime: new  Date().toLocaleString().slice(0,-3)})
   }
 
   render() {
@@ -58,11 +47,21 @@ class Vis extends React.Component {
       },
     }
     let self = this
-
+    
     return (
       <div>
-
-        <Chart height={400} data={this.state.data}  padding={70} scale={scale} forceFit
+        <h2 className='title'>
+          楼层火灾态势感知
+        </h2>
+        <div className='sub-title-container'> 
+          <h3 className='sub-title'>
+            地点
+          </h3>
+          <h3 className='sub-title'>
+            {this.state.curTime}
+          </h3>
+        </div>
+        <Chart height={330} data={this.props.data}  padding={50} scale={scale} forceFit
            onGetG2Instance={g2Chart => {self.chartIns = g2Chart;}}
            onPlotClick={ev => {
               var point = {
@@ -70,25 +69,29 @@ class Vis extends React.Component {
                 y: ev.y
               };
               var items = self.chartIns.getTooltipItems(point);
-              console.log(items);
-              let floor = items[0]['title']
-              
-              
+              let floor = items[0]['point']['point']['floor']  
               self.setState({ selectFloor : floor })
 
-              self.props.selectFloor(floor)
+              let sum = 0
+              self.props.data.map((row)=>{
+                if(row['floor']  == floor){
+                   sum += row['percent']
+                }
+              })
+
+              self.props.selectFloor(floor , sum/100)
             }}
 
         >
-          <Legend />
-          <Axis name="楼层" />
+          <Legend  position='top'/>
+          <Axis name="楼层"  title='楼层'/>
           <Axis name="过火量" />
           <Tooltip />
           <Geom
             type="intervalStack"
             position="floor*percent"
             color={["type" , (filed) => { 
-              let color = ['#ff9c6e','#ad2102']
+              let color = ['#ad2102','#d4380d']
               return filed == '上一时刻' ? color[0] : color[1]
             }]}
             opacity={['floor' , (floor)=>{ // 回调函数
@@ -102,7 +105,43 @@ class Vis extends React.Component {
               stroke: "#fff",
               lineWidth: 1
             }}
+
+            tooltip={['floor*percent*type', (floor, percent,type) => {
+              return {
+                name: '楼层:' + floor,
+                title: type ,
+                value: '过火量' + percent + '%'
+              };
+            }]}
+          >
+          <Label
+            content='name'
+            formatter={(text, item, index)=>{
+              // console.log(item)
+              // text 为每条记录 x 属性的值
+              // item 为映射后的每条数据记录，是一个对象，可以从里面获取你想要的数据信息
+              // index 为每条记录的索引
+              var point = item.point; // 每个弧度对应的点
+
+              let sum = 0
+
+              self.props.data.map((row)=>{
+                if(row['floor']  == point['floor']){
+                   sum += row['percent']
+                }
+              })
+
+              if(point.type == '新增区域')
+                return sum + '%'
+              return null;
+            }}
+              textStyle={{
+                fill: 'white', // 文本的颜色
+                fontSize: '12', // 文本大小
+                fontWeight: 'bold', // 文本粗细
+              }}
           />
+          </Geom>
         </Chart>
       </div>
     );

@@ -14,45 +14,64 @@ class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-
+      floor : '',
+      percent: 0
     }
   }
 
-  handleFlooeSelect(floor){
-    this.setState({ floor })
+  componentWillMount(){
+    let floors = ['F1','F2','F3','F3a','F4','F5']
+    let types  = ['新增区域','上一时刻']
+    let data = []
+
+    for(let i = 0;i < floors.length;i++){
+      for(let j = 0;j < types.length;j++){
+          data.push({
+            'floor' : floors[i],
+            'type'  : types[j],
+            'percent' : Math.round(Math.random() * 20)
+          })
+      }
+    }
+    this.setState({
+      data 
+    })
+  }
+
+  handleFlooeSelect(floor , percent){
+    this.setState({ 
+      floor:floor.toLowerCase(),
+      percent : percent
+    })
+  }
+
+  handleReturn(){
+    console.log('return')
+    this.setState({
+       floor : ''
+    })
   }
 
   render(){
+
+    const vis = (<Vis 
+                      data={this.state.data} 
+                      selectFloor={this.handleFlooeSelect.bind(this)} 
+                      /> )
+
+    const map = (<Map 
+                      floor={this.state.floor} 
+                      return={this.handleReturn.bind(this)} 
+                      percent={this.state.percent}
+                    /> )
+
   return (
-    <div className="App">
-
-      <div className='left-panel'>
-        <BorderBox8 >
-          <Map floor={this.state.floor} />
-        </BorderBox8>
+    <div className="App">   
+      <div className='panel'>   
+        <BorderBox2 >
+          {  this.state.floor == ''  ? vis :   map }
+        </BorderBox2>
       </div>
-      
-      <div className='right-panel'>
-        <BorderBox1 >
-          <Vis selectFloor={this.handleFlooeSelect.bind(this)} />
-        </BorderBox1>
-      </div>
-
-{/*      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>*/}
-      
     </div>
   )}
 }

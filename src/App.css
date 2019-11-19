@@ -3,9 +3,10 @@
   text-align: center;
   background-color: black;
   height: calc(100vh - 150px);
+  /*height: 400px;*/
 }
 
-.left-panel{
+/*.left-panel{
   width: 40%;
   display: inline-block;
   float: left;
@@ -18,6 +19,12 @@
   display: inline-block;
   float: right;
   margin-right: 20px;
+}*/
+
+.panel{
+  width: 800px;
+  display: inline-block;
+  height: 400px;
 }
 
 .App-logo {
