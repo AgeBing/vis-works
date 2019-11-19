@@ -2,6 +2,7 @@
   "name": "fire-vis",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://AgeBing.github.io/fire-vis",
   "dependencies": {
     "@antv/data-set": "^0.10.2",
     "@jiaminghi/data-view-react": "^1.0.7",
