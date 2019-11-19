@@ -10,3 +10,10 @@
 	width: 90%;
 	height: 90%;
 }
+
+
+.container canvas{
+	position: absolute;
+	width: 90%;
+	height: 90%;
+}
