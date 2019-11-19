@@ -1,17 +1,17 @@
 function arrowTo(ctx, p1, p2, arrowOptions) {
         // 初始化参数
         var opts = {
-            startOffset: 5,             // 起点的留空长度
-            endOffset: 5,               // 终点的留空长度
+            startOffset: 2,             // 起点的留空长度
+            endOffset: 2,               // 终点的留空长度
             offset: 0,                  // 偏移位（模拟动画效果用, 使用时建议将justifyAlign设为false） 
             color: '#E6E6FA',           // 默认颜色 
             activeIndex: -1,            // 高亮箭头的索引, 超出回到一圈起始位置。(默认-1，不做高亮处理) 
             activeColor: "#00FF00",     // 高亮颜色(Highligh Color)
-            stepLength: 10,             // 间隔(步长)
+            stepLength: 5,             // 间隔(步长)
             justifyAlign: true,         // 两端对齐(两边撑满, 配合activeIndex > 0时使用) 
-            arrowLength: 15,            // 箭头长度(柄到顶点)            
+            arrowLength: 10,            // 箭头长度(柄到顶点)            
             arrowTheta: 25,             // 箭头两边的夹角（度数） 
-            arrowHeadlen: 6,            // 箭头两边斜边长度 
+            arrowHeadlen: 4,            // 箭头两边斜边长度 
             arrowLineWidth: 1,          // 画箭头的线宽度
             lineWidth: 1,               // 两点间的连丝宽度（>0时，有效）
         };
@@ -20,21 +20,7 @@ function arrowTo(ctx, p1, p2, arrowOptions) {
         if (arrowOptions !== undefined && arrowOptions !== null) {
             opts = Object.assign(opts, arrowOptions);
         }
- 
- 
-        // 画连结两点的线
-//         if (opts.lineWidth > 0) {
-//             ctx.beginPath();
-//             ctx.moveTo(p1.x, p1.y);
-//             ctx.lineTo(p2.x, p2.y);
-//             //颜色，线宽
-//             ctx.strokeStyle = opts.color;
-//             ctx.lineWidth = opts.lineWidth;
-//             ctx.stroke();
-//             ctx.closePath();
-//         }
- 
- 
+
         // 计两点距离
         var len = Math.floor(Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2)));
         // 计算画多少个箭头(注意：最后一个箭头是不需要间隔(步长)，所以可用长度要加一个opts.stepLength)
