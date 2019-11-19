@@ -8,7 +8,7 @@ import pic_f5 from './image/f5.jpg';
 import pic_f3a from './image/f3a.jpg';
 
 import Particle from './util/particle'
-
+import arrowTo from './util/Draw_traj'
 const pics = {
 	'f1' : pic_f1,
 	'f2' : pic_f2,
@@ -26,12 +26,75 @@ class Map extends React.Component {
     }
 
     this.canvas = React.createRef();
+    this.TrajsCanvas = React.createRef();
+    this.floorTrajs ={
+      'f1' : {
+'origin':{ x: 350, y: 150},
+'trajs':[
+      [{ x: 350, y: 150 },{ x: 360, y: 70 }],
+      [{ x: 360, y: 70 },{ x: 400, y: 60 }], 
+      [{ x: 350, y: 150 },{ x: 400, y: 100 }],
+      [{x: 350, y: 150 },{ x: 420, y: 130 }],
+      [{ x: 350, y: 150 },{ x: 400, y: 160 }]
+      ]
+      },
+  'f2' : {
+'origin':{ x: 550, y: 150},
+'trajs':[
+      [{ x: 550, y: 150 },{ x: 520, y: 100 }],
+      [{ x: 550, y: 150 },{ x: 520, y: 210 }], 
+      [{ x: 550, y: 150 },{ x: 600, y: 100 }],
+      [{x: 550, y: 150 },{ x: 600, y: 130 }],
+      [{ x: 550, y: 150 },{ x: 600, y: 160 }]
+      ]
+      },
+  'f3' :{
+'origin':{ x: 350, y: 150},
+'trajs':[
+     [{ x: 350, y: 150 },{ x: 350, y: 70 }],
+      [{ x: 350, y: 70 },{ x: 320, y: 70 }], 
+      [{ x: 350, y: 150 },{ x: 300, y: 200 }],
+      [{x: 350, y: 150 },{ x: 380, y: 70 }],
+      [{ x: 350, y: 150 },{ x: 380, y: 170 }]
+      ]
+      },
+  'f3a' : {
+'origin':{ x: 550, y: 200},
+'trajs':[
+      [{ x: 550, y: 200 },{ x: 580, y: 130 }],
+      [{ x: 550, y: 200 },{ x: 600, y: 150 }], 
+      [{ x: 550, y: 200 },{ x: 580, y: 190 }],
+      // [{x: 550, y: 150 },{ x: 600, y: 130 }],
+      // [{ x: 550, y: 150 },{ x: 600, y: 160 }]
+      ]
+      },
+  'f4' : {
+'origin':{ x: 450, y: 150},
+'trajs':[
+      [{ x: 450, y: 150 },{ x: 510, y: 100 }],
+      [{x: 510, y: 100},{ x: 490, y: 70 }], 
+      [{x: 450, y: 150 },{ x: 500, y: 200 }],
+      [{x: 450, y: 150 },{ x: 390, y: 100 }],
+      [{ x: 390, y: 100 },{ x: 400, y: 70 }]
+      ]
+      },
+  'f5' : {
+'origin':{ x: 550, y: 150},
+'trajs':[
+      [{ x: 550, y: 150 },{ x: 410, y: 120 }],
+      [{ x: 410, y: 120 },{ x: 410, y: 90 }],
+      [{x: 550, y: 150 },{ x: 520, y: 100 }],
+      [{ x: 550, y: 150 },{ x: 600, y: 100 }]
+      ]
+      },
+    }
   }
 
   componentDidMount(){
   	console.log(this.canvas)
 
-  	this.drawBurns()
+  	// this.drawBurns()
+    this.drawTrajs()
   }
 
   // 用 canvas 画团火焰
@@ -87,13 +150,68 @@ class Map extends React.Component {
 
 	let timeoutId = setTimeout(update, 1000 / 30);
 	this.setState({ timeoutId })
-  }
+  };
+  //canvas绘制逃生轨迹
+  drawTrajs(){
+    let myCanvas = this.TrajsCanvas
+    if(!myCanvas  || !myCanvas.current) return
+    // myCanvas.style.cssText = "position:absolute;left:0;top:0; border: 1px solid #ccc;"; // 画布样式
+    myCanvas = this.TrajsCanvas.current
+    let height = myCanvas.clientHeight
+    let width  = myCanvas.clientWidth
+    myCanvas.width = 690;   // 画布的宽度
+    myCanvas.height = 360;  // 画布的高度 
+   // 画笔（绘图对象）
+    var ctx = myCanvas.getContext('2d');
+ 
+    // ctx.fillStyle = "red";
+    // ctx.arc(350, 150,5, 0, Math.PI*2, false);
 
+   
+    // 动画效果
+    var _index = 1;
+    var selfthis = this
+    setInterval(function () {
+        // 清空画布
+        var BW = myCanvas.width;
+        var BH = myCanvas.height;
+        ctx.clearRect(0, 0, BW, BH);                // 清空画布
+        if(selfthis.props.floor)
+          var infs = selfthis.floorTrajs[selfthis.props.floor] 
+        else
+          var infs = selfthis.floorTrajs['f1']
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        ctx.arc(infs['origin']['x'],infs['origin']['y'],3, 0, Math.PI*2, false);
+        ctx.fill();
+        ctx.closePath();
+        // 整体偏移效果
+        var offset = (_index % 3) * 5; 
+        for(var i=0;i<infs['trajs'].length;i++)
+        {
+          arrowTo(ctx,infs['trajs'][i][0], infs['trajs'][i][1],{ offset: offset, color: "red", justifyAlign: false });
+        }
+//         arrowTo(ctx,{ x: 350, y: 150 }, { x: 360, y: 70 },  { offset: offset, color: "red", justifyAlign: false });
+//         arrowTo(ctx,{ x: 360, y: 70 }, { x: 400, y: 60 },  { offset: offset, color: "red", justifyAlign: false });
+//         arrowTo(ctx, { x: 350, y: 150 }, { x: 400, y: 100 }, { offset: offset, color: "red", justifyAlign: false });
+//         arrowTo(ctx, { x: 350, y: 150 }, { x: 420, y: 130 }, { offset: offset, color: "red", justifyAlign: false });
+//         arrowTo(ctx, { x: 350, y: 150 },  { x: 400, y: 160 }, { offset: offset, color: "red", justifyAlign: false });
+ 
+        // 其他处理
+        if (_index >= 50) {
+            _index = 1
+        }
+        else {
+            _index++;
+        }
+    }, 300);
+}
   render() {
     return (
       <div className='container'>
         <img src={pics[ this.props.floor ] ||  pics['f1']}  className='image' />
-        <canvas ref={this.canvas}/>
+        // <canvas ref={this.canvas}/>
+        <canvas ref={this.TrajsCanvas}/>
       </div>
     );
   }
