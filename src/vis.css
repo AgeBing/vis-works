@@ -1,0 +1,18 @@
+.title{
+	color: white;
+    font-size: 30px;
+    margin: 0;
+    font-weight: 800;
+    padding-top: 10px;
+}
+.sub-title-container{
+	display: flex;
+	justify-content: space-between;
+}
+.sub-title{
+	color: white;
+    font-size: 15px;
+    font-weight: 800;
+    margin: 0 64px;
+    border-bottom: solid white 1px;
+}
