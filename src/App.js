@@ -26,10 +26,16 @@ class App extends React.Component {
 
     for(let i = 0;i < floors.length;i++){
       for(let j = 0;j < types.length;j++){
+          let percent = Math.round(Math.random() * 25)
+          if(floors[i] == 'F4' && types[j] == '新增区域')
+              percent = 25
+          if(floors[i] == 'F4' && types[j] == '上一时刻')
+              percent = 40          
+
           data.push({
             'floor' : floors[i],
             'type'  : types[j],
-            'percent' : Math.round(Math.random() * 25)
+            'percent' : percent
           })
       }
     }
