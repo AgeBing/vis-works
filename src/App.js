@@ -29,7 +29,7 @@ class App extends React.Component {
           data.push({
             'floor' : floors[i],
             'type'  : types[j],
-            'percent' : Math.round(Math.random() * 20)
+            'percent' : Math.round(Math.random() * 25)
           })
       }
     }
