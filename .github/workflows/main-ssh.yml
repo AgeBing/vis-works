@@ -13,8 +13,8 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        command_timeout: 300
-        timeout: 100
+        command_timeout: 20min
+        timeout: 100s
         script: |
           whoami
           pwd
