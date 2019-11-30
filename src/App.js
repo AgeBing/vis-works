@@ -1,13 +1,13 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'
+
 import './App.css';
-import Vis from './vis';
-import Map from './map';
+import 'antd/dist/antd.css';
 
-
-import { BorderBox1,BorderBox2,
-        BorderBox8
-    } from '@jiaminghi/data-view-react'
+import { Icon,Button } from 'antd'
+import  Fire from './components/fire/index'
+import  Board from './components/board/index'
+import  Urban from './components/urban/index'
 
 class App extends React.Component {
   
@@ -20,64 +20,29 @@ class App extends React.Component {
   }
 
   componentWillMount(){
-    let floors = ['F1','F2','F3','F3a','F4','F5']
-    let types  = ['新增区域','上一时刻']
-    let data = []
-
-    for(let i = 0;i < floors.length;i++){
-      for(let j = 0;j < types.length;j++){
-          let percent = Math.round(Math.random() * 25)
-          if(floors[i] == 'F4' && types[j] == '新增区域')
-              percent = 25
-          if(floors[i] == 'F4' && types[j] == '上一时刻')
-              percent = 40          
-
-          data.push({
-            'floor' : floors[i],
-            'type'  : types[j],
-            'percent' : percent
-          })
-      }
-    }
-    this.setState({
-      data 
-    })
-  }
-
-  handleFlooeSelect(floor , percent){
-    this.setState({ 
-      floor:floor.toLowerCase(),
-      percent : percent
-    })
-  }
-
-  handleReturn(){
-    console.log('return')
-    this.setState({
-       floor : ''
-    })
+  
   }
 
   render(){
+    const Index = () => <div>Index页面</div>
 
-    const vis = (<Vis 
-                      data={this.state.data} 
-                      selectFloor={this.handleFlooeSelect.bind(this)} 
-                      /> )
-
-    const map = (<Map 
-                      floor={this.state.floor} 
-                      return={this.handleReturn.bind(this)} 
-                      percent={this.state.percent}
-                    /> )
+    const About = () => <div>About页面</div>
 
   return (
     <div className="App">   
-      <div className='panel'>   
-        <BorderBox2 >
-          {  this.state.floor == ''  ? vis :   map }
-        </BorderBox2>
-      </div>
+        <BrowserRouter>
+            <div className='home-btn'>
+              <Link to='/'>
+                <Button shape="circle" icon="home"/>
+              </Link>
+            </div>
+            {/*路由配置*/}
+            <Switch>
+                <Route path='/' exact component={Board}></Route>
+                <Route path='/urban' exact component={Urban}></Route>
+                <Route path='/fire' exact component={Fire}></Route>
+            </Switch>
+        </BrowserRouter>
     </div>
   )}
 }

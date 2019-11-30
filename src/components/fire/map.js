@@ -1,14 +1,14 @@
 import React from "react";
 import './map.css';
-import pic_f1 from './image/f1.jpg';
-import pic_f2 from './image/f2.jpg';
-import pic_f3 from './image/f3.jpg';
-import pic_f4 from './image/f4.jpg';
-import pic_f5 from './image/f5.jpg';
-import pic_f3a from './image/f3a.jpg';
+import pic_f1 from '../../image/f1.jpg';
+import pic_f2 from '../../image/f2.jpg';
+import pic_f3 from '../../image/f3.jpg';
+import pic_f4 from '../../image/f4.jpg';
+import pic_f5 from '../../image/f5.jpg';
+import pic_f3a from '../../image/f3a.jpg';
 
-import Particle from './util/particle'
-import arrowTo from './util/Draw_traj'
+import Particle from '../../util/particle'
+import arrowTo from '../../util/Draw_traj'
 const pics = {
 	'f1' : pic_f1,
 	'f2' : pic_f2,
