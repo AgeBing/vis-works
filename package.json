@@ -2,7 +2,7 @@
   "name": "fire-vis",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://AgeBing.github.io/fire-vis",
+  "homepage": "https://AgeBing.github.io/vis-works",
   "dependencies": {
     "@antv/data-set": "^0.10.2",
     "@antv/l7": "^2.0.0-beta.16",
