@@ -19,10 +19,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp -a ./docs ./build/docs",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "doc" : "docsify serve ./docs"
   },
   "eslintConfig": {
     "extends": "react-app"
