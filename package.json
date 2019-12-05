@@ -5,8 +5,7 @@
   "homepage": "https://AgeBing.github.io/vis-works",
   "dependencies": {
     "@antv/data-set": "^0.10.2",
-    "@antv/l7": "^2.0.0-beta.16",
-    "@antv/l7-maps": "^2.0.0-beta.16",
+    "@antv/l7": "^1.4.7",
     "@jiaminghi/data-view-react": "^1.0.7",
     "antd": "^3.25.3",
     "bizcharts": "^3.5.6",
@@ -23,7 +22,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "doc" : "docsify serve ./docs"
+    "doc": "docsify serve ./docs"
   },
   "eslintConfig": {
     "extends": "react-app"
