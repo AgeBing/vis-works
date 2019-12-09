@@ -30,8 +30,8 @@ class MyMap extends Component {
       // mapStyle: 'light',
       center: [114.5082664490,38.0413316426],
       // center: [120.19382669582967, 30.258134],
-      pitch: 60,
-      zoom: 13.6,
+      // pitch: 60,
+      zoom: 13.2,
       zoomControl: false,
       scaleControl: false,
       attributionControl: false
@@ -41,8 +41,8 @@ class MyMap extends Component {
         let kakou = await self.getKakous()
         let trajs = await self.getTrajs(kakou.map)
         self.drawPoints(kakou.arr)
-        self.drawLines(trajs)
-        // self.drawMoves()
+        // self.drawLines(trajs.slice(0,100))
+        self.drawLinesUpdate(trajs)
     });
   }
   async getKakous(){
@@ -124,7 +124,7 @@ class MyMap extends Component {
       })
       .shape('circle')
       // .shape('name', 'text')
-      .size(3) 
+      .size(1) 
       .active(true)
       .color('#ffc53d')
       .style({
@@ -141,34 +141,100 @@ class MyMap extends Component {
   drawLines(lines){
     let self = this
 
+    if(!this.state.trajLayer){
+      let ll = self.scene.LineLayer({
+        zIndex: 3
+      })
+      .source(lines, {
+        parser: {
+          type:'json',
+          x: 'lng1',
+          y: 'lat1',
+          x1: 'lng2',
+          y1: 'lat2'
+        }
+      })
+      .shape('line')
+      .size(3)
+      .color('#722ed1')
+      .style({
+        opacity: 0.85,
+      })
+      .animate({
+        enable:true, // 开启动画
+        interval:0.2, //  0-1 轨迹间隔 
+        duration:2, // 动画时间
+        trailLength:0.4, // 轨迹长度 0-1
+      })
+      .render();
+
+      this.setState({
+         trajLayer: ll
+      })
+      console.log("origin",lines.length)
+    }else{
+      let ll = this.state.trajLayer
+      ll = ll.source(lines, {
+        parser: {
+          type:'json',
+          x: 'lng1',
+          y: 'lat1',
+          x1: 'lng2',
+          y1: 'lat2'
+        }
+      }) 
+      .repaint();
+      this.setState({
+         trajLayer: ll
+      })
+      console.log("new",lines.length)
+
+    }
+  }
+  drawLinesUpdate(lines){
+    let self = this
     let ll = self.scene.LineLayer({
-      zIndex: 3
-    })
-    .source(lines, {
-      parser: {
-        type:'json',
-        x: 'lng1',
-        y: 'lat1',
-        x1: 'lng2',
-        y1: 'lat2'
-      }
-    })
-    .shape('line')
-    .size(3)
-    .color('#722ed1')
-    .style({
-      opacity: 0.85,
-    })
-    .animate({
-      enable:true, // 开启动画
-      interval:0.3, //  0-1 轨迹间隔 
-      duration:3, // 动画时间
-      trailLength:0.4, // 轨迹长度 0-1
-    })
-    .render();
+        zIndex: 3
+      })
+      .source(lines, {
+        parser: {
+          type:'json',
+          x: 'lng1',
+          y: 'lat1',
+          x1: 'lng2',
+          y1: 'lat2'
+        }
+      })
+      .shape('line')
+      .size(3)
+      .color('#722ed1')
+      .style({
+        opacity: 0.85,
+      })
+      .animate({
+        enable:true, // 开启动画
+        interval:0.2, //  0-1 轨迹间隔 
+        duration:2, // 动画时间
+        trailLength:0.4, // 轨迹长度 0-1
+      })
+      .render()
+
+      let T  = 1000
+      setInterval(()=>{
+        let newLines = lines.slice(0,Math.random()*1000)
+        console.log(newLines.length)
+          ll.setData(newLines, {
+            parser: {
+              type:'json',
+              x: 'lng1',
+              y: 'lat1',
+              x1: 'lng2',
+              y1: 'lat2'
+            }
+          })
+      },T * 3)
 
   }
-
   render() {
     return (
       <div

@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'
 import './index.css';
 
-import Map from './Scene';
+import MyMap from './Scene';
+import Widgets from  './TimeWidget'
 
 class Urban extends React.Component {
   
@@ -19,7 +20,11 @@ class Urban extends React.Component {
   render(){
   return (
     <div className="urban-app">       
-    	<Map></Map>
+    	<MyMap></MyMap>
+      <div className='widget-time'>
+        <Widgets>
+        </Widgets>
+      </div>
     </div>
   )}
 }
