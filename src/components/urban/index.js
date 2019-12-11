@@ -16,13 +16,17 @@ class Urban extends React.Component {
   componentWillMount(){
 
   }
+  handleUpdateMapTime(h){
+    console.log("map time",h)
+    this.setState({ mapTime:h })
+  }
 
   render(){
   return (
     <div className="urban-app">       
-    	<MyMap></MyMap>
+    	<MyMap hour={this.state.mapTime}></MyMap>
       <div className='widget-time'>
-        <Widgets>
+        <Widgets updateMapTime={this.handleUpdateMapTime.bind(this)} >
         </Widgets>
       </div>
     </div>

@@ -6,7 +6,7 @@ import * as L7 from '@antv/l7';
 // 注意 30 天绑定域名会变化
 const centerCsvUrl = 'http://q1vcletmu.bkt.clouddn.com/center_gcj02.csv'
 const centerRoadUrl = 'http://q1vcletmu.bkt.clouddn.com/road_400_f.csv'
-const trajsUrl = "http://q1vcletmu.bkt.clouddn.com/trajs_forvis_1869.csv"
+const trajsUrlBase = "http://q1vcletmu.bkt.clouddn.com/"
 const movesUrl = "https://gw.alipayobjects.com/os/basement_prod/40ef2173-df66-4154-a8c0-785e93a5f18e.json"
 const kakouCsvUrl = 'http://q1vcletmu.bkt.clouddn.com/kakou.csv'
 
@@ -21,17 +21,25 @@ class MyMap extends Component {
   componentDidMount(){
     this.createInstance()
   }
+  componentWillReceiveProps(nextProps) {
 
+    if (this.props.hour !== nextProps.hour && this.props.hour ){
+        let hour = nextProps.hour
+        console.log('render' , hour)
+        this.drawLinesUpdate(this.state.trajs[hour])
+    }
+  }
   async createInstance(){
     let self = this
     var scene = new L7.Scene({
       id: 'map',
-      mapStyle: 'dark',
-      // mapStyle: 'light',
+      // mapStyle: 'dark',
+      mapStyle: 'light',
       center: [114.5082664490,38.0413316426],
       // center: [120.19382669582967, 30.258134],
-      // pitch: 60,
-      zoom: 13.2,
+      pitch: 60,
+      // zoom: 13.2,
+      zoom: 13.8,
       zoomControl: false,
       scaleControl: false,
       attributionControl: false
@@ -40,10 +48,18 @@ class MyMap extends Component {
     scene.on('loaded', async function() {
         let kakou = await self.getKakous()
         let trajs = await self.getTrajs(kakou.map)
+        console.log(trajs)
         self.drawPoints(kakou.arr)
-        // self.drawLines(trajs.slice(0,100))
-        self.drawLinesUpdate(trajs)
-    });
+        self.setState({ trajs })
+
+        // for(let i = 0; i < 14;i++){
+        //   let T  = 2000
+        //   setTimeout(()=>{
+        //       self.drawLinesUpdate(trajs[i])
+        //   },T * i)
+        // }
+
+    })
   }
   async getKakous(){
     return new Promise((resolve,reject)=>{
@@ -87,27 +103,38 @@ class MyMap extends Component {
     })
   }
   async getTrajs(kakouMap){
-    return new Promise((resolve,reject)=>{
-        d3.csv(trajsUrl).then((data)=>{
-          let trajs = []
-          data.map((row)=>{
-            let s = row['start'],
-                e = row['end'],
-                s_p = kakouMap.get(s),
-                e_p = kakouMap.get(""+e)
-            if(s_p && e_p){  // 卡口点存在
-              trajs.push({
-                lng1 : s_p['lng'],
-                lat1 : s_p['lat'],
-                lng2 : e_p['lng'],
-                lat2 : e_p['lat']
-              })
-            }
-          })  
-          console.log(trajs.length)
-          resolve( trajs )
-        })
-    })
+
+    let ps = []
+
+    for(let i = 1;i < 15;i++){
+        let p = new Promise((resolve,reject)=>{
+
+                    let trajUrl = trajsUrlBase + "t_df_" + i + ".csv"
+                    d3.csv(trajUrl).then((data)=>{
+                      let trajs = []
+                      data.map((row)=>{
+                        let s = row['s'],
+                            e = row['e'],
+                            s_p = kakouMap.get(s),
+                            e_p = kakouMap.get(""+e)
+                        if(s_p && e_p){  // 卡口点存在
+                          trajs.push({
+                            lng1 : s_p['lng'],
+                            lat1 : s_p['lat'],
+                            lng2 : e_p['lng'],
+                            lat2 : e_p['lat']
+                          })
+                        }
+                      })  
+                      console.log(trajs.length)
+                      resolve( trajs )
+                    })
+                })
+
+        ps.push( p )
+    }
+
+    return Promise.all(ps)
   }
   drawPoints(points){
       let self = this
@@ -138,10 +165,34 @@ class MyMap extends Component {
         console.log(ev)
       });
   }
-  drawLines(lines){
+  prepareLineLayer(){
     let self = this
 
-    if(!this.state.trajLayer){
+    let ll = self.scene.LineLayer({
+      zIndex: 3
+    })
+    .shape('line')
+    .size(3)
+    .color('#722ed1')
+    .style({
+      opacity: 0.85,
+    })
+    .animate({
+      enable:true, // 开启动画
+      interval:0.2, //  0-1 轨迹间隔 
+      duration:2, // 动画时间
+      trailLength:0.4, // 轨迹长度 0-1
+    })
+    .render()
+    console.log(ll)
+
+    return ll 
+      // .render();
+  }
+  drawLinesUpdate(lines){
+    let ll 
+    let self = this
+    if(!self.trajsLayer){
       let ll = self.scene.LineLayer({
         zIndex: 3
       })
@@ -156,58 +207,7 @@ class MyMap extends Component {
       })
       .shape('line')
       .size(3)
-      .color('#722ed1')
-      .style({
-        opacity: 0.85,
-      })
-      .animate({
-        enable:true, // 开启动画
-        interval:0.2, //  0-1 轨迹间隔 
-        duration:2, // 动画时间
-        trailLength:0.4, // 轨迹长度 0-1
-      })
-      .render();
-
-      this.setState({
-         trajLayer: ll
-      })
-      console.log("origin",lines.length)
-    }else{
-      let ll = this.state.trajLayer
-      ll = ll.source(lines, {
-        parser: {
-          type:'json',
-          x: 'lng1',
-          y: 'lat1',
-          x1: 'lng2',
-          y1: 'lat2'
-        }
-      }) 
-      .repaint();
-      this.setState({
-         trajLayer: ll
-      })
-      console.log("new",lines.length)
-
-    }
-  }
-  drawLinesUpdate(lines){
-    let self = this
-    let ll = self.scene.LineLayer({
-        zIndex: 3
-      })
-      .source(lines, {
-        parser: {
-          type:'json',
-          x: 'lng1',
-          y: 'lat1',
-          x1: 'lng2',
-          y1: 'lat2'
-        }
-      })
-      .shape('line')
-      .size(3)
-      .color('#722ed1')
+      .color('#40a9ff')
       .style({
         opacity: 0.85,
       })
@@ -219,21 +219,21 @@ class MyMap extends Component {
       })
       .render()
 
-      let T  = 1000
-      setInterval(()=>{
-        let newLines = lines.slice(0,Math.random()*1000)
-        console.log(newLines.length)
-          ll.setData(newLines, {
-            parser: {
-              type:'json',
-              x: 'lng1',
-              y: 'lat1',
-              x1: 'lng2',
-              y1: 'lat2'
-            }
-          })
-      },T * 3)
+      self.trajsLayer = ll
+    }else{
+      console.log(lines.length)
+      ll = self.trajsLayer
+      ll.setData(lines, {
+        parser: {
+          type:'json',
+          x: 'lng1',
+          y: 'lat1',
+          x1: 'lng2',
+          y1: 'lat2'
+        }
+      })
 
+    }
   }
   render() {
     return (
