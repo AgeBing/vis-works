@@ -53,6 +53,18 @@ class Board extends React.Component {
             description="使用 @antv/L7 进行展示" />
         </Card>
       </Col>
+
+      <Col span={8}>
+        <Card  
+          hoverable
+          cover={<img alt="example"  style={coverStyle}/>}
+          onClick={this.redirectTo.bind(this,'/traffic')}
+        >
+          <Card.Meta 
+            title="旭日图" 
+            description="使用 @antv/L7 进行展示" />
+        </Card>
+      </Col>
     </Row>
 
     <div className='links-contain'>
