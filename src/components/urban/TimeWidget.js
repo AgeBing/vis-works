@@ -75,7 +75,7 @@ class IntegerStep extends React.Component {
       hour: value,
     })
 
-    this.props.updateMapTime(value)
+    // this.props.updateMapTime(value)
   };
 
   // 跟新时间 
@@ -105,8 +105,10 @@ class IntegerStep extends React.Component {
     const { hour,start } = this.state;
 
     return (
-      <div>
+      <div style={{height: '300px'}}>
           <Slider
+            vertical
+            reverse
             min={0}
             max={24}
             marks={marks}
@@ -114,7 +116,7 @@ class IntegerStep extends React.Component {
             value={typeof hour === 'number' ? hour : 2}
           />
           <Statistic value={getTime(hour)}/ >
-          <Switch size="small" checked={start} onChange={this.handleStartChange} />
+          {/*<Switch size="small" checked={start} onChange={this.handleStartChange}/>*/}
       </div>
     );
   }

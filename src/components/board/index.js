@@ -68,8 +68,11 @@ class Board extends React.Component {
     </Row>
 
     <div className='links-contain'>
-      <a href='https://github.com/AgeBing/vis-works'>
+      <a href='https://github.com/AgeBing/vis-works' className='ref-icons'>
         <Button shape="circle" icon="github"/>
+      </a>
+      <a href='http://aggge.cn/vis-works/docs' className='ref-icons'>
+        <Button shape="circle" icon="read"/>
       </a>
     </div>
     
