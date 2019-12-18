@@ -18,43 +18,40 @@ class TrafficMap extends Component {
   }
 
   componentDidMount(){
-    console.log("componentDidMount---traffic");
+    // console.log("componentDidMount---traffic");
     this.createInstance()
   }
   componentWillReceiveProps(nextProps) {
-
-    // if (this.props.hour !== nextProps.hour && this.props.hour ){
-    //     let hour = nextProps.hour
-    //     console.log('render' , hour)
-    //     this.drawLinesUpdate(this.state.trajs[hour])
-    // }
   }
   async createInstance(){
     let self = this
     var scene = new L7.Scene({
       id: 'trafficMap',
-      mapStyle: 'dark',
-      // mapStyle: 'light',
+      mapStyle: 'light',
       center: [114.5082664490,38.0413316426],
-      // center: [120.19382669582967, 30.258134],[113.909127, 37.900000],center: 
       // pitch: 60,
-      // zoom: 13.2,
       zoom: 13.2,
       zoomControl: false,
       scaleControl: false,
       attributionControl: false
     });
     this.scene = scene
+    let circleData;
     scene.on('loaded', async function() {
         let kakou = await self.getKakous();
         // 利用上面生成的卡口的映射，kakou.map是记录了映射
         let trajs = await self.getTrajs(kakou.map);
         let fData =  await self.calData(trajs);
         self.drawLineLayer(fData.lineData);
-        self.drawPoints(fData.recData,fData.circleData);
-        self.addPopup(fData.recData,fData.circleData);
+        circleData = fData.circleData;
+        self.drawPoints(fData.circleData);
+        self.drawRecs(fData.recData);
         self.setState({ trajs });
     })
+    // scene.on('zoomend',function(){
+    //   console.log("zoomchange",circleData);
+    //   self.drawPoints(circleData);
+    // })
   }
   async addPopup(rData,cData){
     for(let i =0;i<rData.length;i++){
@@ -145,11 +142,25 @@ class TrafficMap extends Component {
     let lineData = [];
     let numId = 0;
     for(let recId of recIds){
+
+      let centerCor = Features[recId].geo;
+      let cornerCords = [];
+      let nDis = (dis-dis*0.03)/2;
+      cornerCords[0]=[centerCor[0]-nDis,centerCor[1]+nDis];
+      cornerCords[1]=[centerCor[0]+nDis,centerCor[1]+nDis];
+      cornerCords[2]=[centerCor[0]+nDis,centerCor[1]-nDis];
+      cornerCords[3]=[centerCor[0]-nDis,centerCor[1]-nDis];
+      cornerCords[4]=[centerCor[0]-nDis,centerCor[1]+nDis];
+
       recData[numId] = {
-        "id":Features[recId].id,
-        "lng":Features[recId].geo[0],
-        "lat":Features[recId].geo[1],
-        "sum":Features[recId].sum
+        'id':Features[recId].id,
+        // "lng":Features[recId].geo[0],
+        // "lat":Features[recId].geo[1],
+        'in':Features[recId].in,
+        'out':Features[recId].out,
+        'sum':Features[recId].sum,
+        'type': "Polygon",
+        'geometryCoord':[cornerCords]
       };
       let nInOrOut;
       let nAbs;
@@ -167,7 +178,7 @@ class TrafficMap extends Component {
         "abs":nAbs,
         "inOrOut":nInOrOut,
       };
-      let maxId;
+      let maxId=recId;
       let maxNum=-1;
       //  求出最大的邻居编号
       for(let j = 0;j<Features[recId].neighNum.length;j++){
@@ -185,14 +196,13 @@ class TrafficMap extends Component {
         latDis = latDis>0?dis:-1*dis;
         newLat = Features[recId].geo[1]+latDis*ratio;
       }else{
-        //该方向的斜率，存在
-        let k = (Features[maxId].geo[1]-Features[recId].geo[1])/(Features[maxId].geo[0]-Features[recId].geo[0]);
-        let lonDis = Features[maxId].geo[0]-Features[recId].geo[0];
-        lonDis = lonDis>0?dis:-1*dis;
-        newLon = Features[recId].geo[0]+lonDis*ratio;
-        newLat = Features[recId].geo[1]+lonDis*k*ratio;
+        //该方向的斜率
+        // 两点连线的长度的平方
+        let lonSquare = Math.pow((Features[maxId].geo[1]-Features[recId].geo[1]),2)+Math.pow((Features[maxId].geo[0]-Features[recId].geo[0]),2);
+        let k = Math.pow(Math.pow(dis,2)/lonSquare,0.5);
+        newLon = (Features[maxId].geo[0]-Features[recId].geo[0])*k*ratio +Features[recId].geo[0] ;
+        newLat = (Features[maxId].geo[1]-Features[recId].geo[1])*k*ratio +Features[recId].geo[1] ;
       }
-      
       // console.log("lonDis,latDis",lonDis,latDis,ratio);
       lineData[numId] = {
         "id":Features[recId].id,
@@ -279,8 +289,46 @@ class TrafficMap extends Component {
     }
     return Promise.all(ps)
   }
-  drawPoints(rData,cData){
-    // console.log("rec,circle",rData,cData);
+  drawRecs(rData){
+    console.log("recData",rData);
+      let self = this
+      // 绘制矩形
+      let pl = self.scene.PolygonLayer({
+          zIndex: 3
+      })
+      .source(rData,{
+        parser:{
+          type:'json',
+          coordinates:'geometryCoord'
+        },
+      })
+      .active(true)
+      .shape('fill')
+      .color('sum',[
+        '#FFD591',
+        '#FF7A45',
+        '#ff0000'
+      ])
+      .style({
+        opacity: 0.7,// 建立透明度映射{'sum',[0.5,1]}
+      })
+      .render();
+      pl.setHeight(3);
+      let popup = new L7.Popup();
+      pl.on('click', (ev)=>{
+        let cord = ev.feature.geometryCoord[0];
+        popup.setLnglat(cord[0]);
+        let info = "总体的车流量为:" + ev.feature.sum +"  流入:"+ev.feature.in+"   流出:" + ev.feature.out; 
+        popup.setText(info);
+        popup.addTo(self.scene);
+        console.log("mouseover",info,ev);
+      });
+      pl.on('mouseout', (ev)=>{
+        popup.remove();
+        console.log("mouseout",ev);
+      }); 
+  }
+  drawPoints(cData){
       let self = this
       
       // 绘制中心圆
@@ -296,8 +344,7 @@ class TrafficMap extends Component {
         },
       })
       .shape('circle')
-      // .shape('name', 'text')
-      .size('abs',[4,12]) 
+      .size('abs',[this.scene.getZoom()/3,this.scene.getZoom()]) 
       .active(true)
       .color('inOrOut',['#ff0000','#0000ff'])
       .style({
@@ -305,54 +352,13 @@ class TrafficMap extends Component {
         strokeWidth: 0
       })
       .render();
-      pl2.setHeight(80);
-
-
-      // 绘制矩形
-      let pl = self.scene.PointLayer({
-          zIndex: 3
-      })
-      .source(rData,{
-        parser:{
-            type:'json',
-            x : 'lng',
-            y : 'lat',
-            name: 'id',
-        },
-      })
-      .shape('square')
-      // .shape('name', 'text')
-      .size(15) 
-      .active(true)
-      .color('sum',[
-        // '#DAF291',
-        '#FFD591',
-        '#FF7A45',
-        '#ff0000'
-      ])
-      .style({
-        opacity: 0.8,// 建立透明度映射{'sum',[0.5,1]}
-        strokeWidth: 0
-      })
-      .render();
-      pl.setHeight(3);
-      let popup = new L7.Popup();
-      pl.on('mouseover', (ev)=>{
-        popup.setLnglat([ev.lnglat.lng,ev.lnglat.lat]);
-        let info = "总体的车流量为：" + ev.feature.sum +'<br>' ; 
-        popup.setText(info);
-        console.log("mouseover",ev);
-      });
-      pl.on('mouseout', (ev)=>{
-        popup.remove();
-        console.log("mouseout",ev);
-      }); 
+      pl2.setHeight(10);
   }
   drawLineLayer(data){
     let self = this
 
     let ll = self.scene.LineLayer({
-      zIndex: 1
+      zIndex: 7
     })
     .source(data, {
       parser:{
@@ -364,16 +370,15 @@ class TrafficMap extends Component {
       }
     })
     .shape('line')
-    .size(1.5)
+    .size(2)
     .color('#ffffff')
     .style({
       opacity: 1,
     })
     .render()
-    // console.log(ll)
-    ll.setHeight(500);
+    
+    ll.setHeight(400);
     return ll 
-      // .render();
   }
   
   render() {
