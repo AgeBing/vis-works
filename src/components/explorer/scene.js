@@ -106,9 +106,9 @@ class MyMap extends Component {
       // .shape('name', 'text')
       .size(1) 
       .active(true)
-      .color('#ffc53d')
+      .color('#FFBD90')
       .style({
-        opacity: 0.8,
+        opacity: 0.9,
         strokeWidth: 0
       })
       .render();
@@ -125,7 +125,7 @@ class MyMap extends Component {
       zIndex: 3
     })
     .shape('line')
-    .size(3)
+    .size(2.5)
     .color('#722ed1')
     .style({
       opacity: 0.85,
@@ -160,7 +160,7 @@ class MyMap extends Component {
       })
       .shape('line')
       .size(3)
-      .color('#40a9ff')
+      .color('#A1D7FF')
       .style({
         opacity: 0.85,
       })

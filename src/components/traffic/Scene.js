@@ -48,10 +48,6 @@ class TrafficMap extends Component {
         self.drawRecs(fData.recData);
         self.setState({ trajs });
     })
-    // scene.on('zoomend',function(){
-    //   console.log("zoomchange",circleData);
-    //   self.drawPoints(circleData);
-    // })
   }
   async addPopup(rData,cData){
     for(let i =0;i<rData.length;i++){

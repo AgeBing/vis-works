@@ -13,11 +13,11 @@ const kakouCsvUrl = "http://q1vcletmu.bkt.clouddn.com/kakou.csv"
 
 function colorScale(v) {
   if( v > 800){
-    return '#ff4d4f'
+    return '#FF5900'
   }else if(v > 400){
-    return '#ffec3d'
+    return '#F58A00'
   }else{
-    return '#95de64'
+    return '#FFB703'
   }
 }
 
