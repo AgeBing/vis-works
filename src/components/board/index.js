@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Link, Switch,withRouter } from 'react-router-dom'
 import { Card, Col, Row,Button } from 'antd';
 import './index.css';
 import fireImg from '../../image/snapshots/fire.png'
+import urabnImg from '../../image/snapshots/urban.png'
+
 
 class Board extends React.Component {
   
@@ -45,7 +47,7 @@ class Board extends React.Component {
       <Col span={8}>
         <Card  
           hoverable
-          cover={<img alt="example"  style={coverStyle}/>}
+          cover={<img alt="example" src={urabnImg} style={coverStyle}/>}
           onClick={this.redirectTo.bind(this,'/urban')}
         >
           <Card.Meta 
@@ -54,6 +56,7 @@ class Board extends React.Component {
         </Card>
       </Col>
 
+      {/*
       <Col span={8}>
         <Card  
           hoverable
@@ -65,13 +68,15 @@ class Board extends React.Component {
             description="使用 @antv/L7 进行展示" />
         </Card>
       </Col>
+      */}
     </Row>
 
     <div className='links-contain'>
       <a href='https://github.com/AgeBing/vis-works' className='ref-icons'>
         <Button shape="circle" icon="github"/>
       </a>
-      <a href='http://aggge.cn/vis-works/docs' className='ref-icons'>
+      <a 
+        className='ref-icons'>
         <Button shape="circle" icon="read"/>
       </a>
     </div>

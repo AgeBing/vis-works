@@ -8,6 +8,8 @@ import  KakouList  from  './KakouList'
 import KakouDetail from './KakouDetail'
 import { Icon,Button,Drawer,Switch,Divider } from 'antd'
 
+import moonIcon from '../../image/moon.png'
+import sunIcon from '../../image/sun.png'
 
 
 
@@ -39,7 +41,8 @@ class Urban extends React.Component {
         }
       ],
       pitchMode : '3D',
-      mapTime : 6
+      mapTime : 6,
+      mapTheme : 'dark'
     }
   }
 
@@ -80,10 +83,13 @@ class Urban extends React.Component {
   }
   handleChangeMapPitch(){
     let { pitchMode }= this.state
-
     pitchMode =  pitchMode == '2D' ? '3D' : '2D'
-
     this.setState({ pitchMode })
+  }
+  handleChangeMapTheme(){
+    let { mapTheme }= this.state
+    mapTheme =  mapTheme == 'dark' ? 'light' : 'dark'
+    this.setState({ mapTheme })
   }
   render(){
     return (
@@ -94,6 +100,7 @@ class Urban extends React.Component {
           selectedKakou={this.state.selectedKakou}
           visbilities={this.state.visbilities}
           pitchMode={this.state.pitchMode}
+          mapTheme={this.state.mapTheme}
         >
         </MyMap>
 
@@ -107,8 +114,12 @@ class Urban extends React.Component {
                 selectKakouFunc={this.hanleShowKakouDetaile.bind(this)}/>
               <div className="config-btn-contain">
                 <Button shape="circle" icon="setting" onClick={this.showConfigPanel.bind(this)}/>
-                <Button shape="circle" icon="eye"/>
-                <Button shape="circle" style={{ 'fontSize':'24px'}} onClick={this.handleChangeMapPitch.bind(this)}> {this.state.pitchMode} </Button>
+                <Button shape="circle" onClick={this.handleChangeMapTheme.bind(this)}>
+                  <img className='img-icon' src={this.state.mapTheme == 'light' ? moonIcon : sunIcon } />
+                </Button>
+                <Button shape="circle" style={{ 'fontSize':'24px'}} onClick={this.handleChangeMapPitch.bind(this)}> 
+                  {this.state.pitchMode} 
+                </Button>
               </div>
             </div>
           )

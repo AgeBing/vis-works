@@ -10,6 +10,9 @@ const trajsUrlBase = "http://q1vcletmu.bkt.clouddn.com/"
 const movesUrl = "https://gw.alipayobjects.com/os/basement_prod/40ef2173-df66-4154-a8c0-785e93a5f18e.json"
 const kakouCsvUrl = 'http://q1vcletmu.bkt.clouddn.com/kakou.csv'
 
+
+
+
 class MyMap extends Component {
   state = {
   }
@@ -36,6 +39,9 @@ class MyMap extends Component {
     }
 
     this.switchVisibility(nextProps.visbilities)
+    
+    this.switchTheme(nextProps.mapTheme)
+
 
     if( nextProps.pitchMode !== this.props.pitchMode ){
 
@@ -46,8 +52,8 @@ class MyMap extends Component {
     let self = this
     var scene = new L7.Scene({
       id: 'map',
-      // mapStyle: 'dark',
-      mapStyle: 'light',
+      mapStyle: 'dark',
+      // mapStyle: 'light',
       // center: [114.5082664490,38.0413316426],
       center:[114.50175901191922, 38.04101919751572],
       // pitch: 85,
@@ -57,6 +63,7 @@ class MyMap extends Component {
       scaleControl: false,
       attributionControl: false
     });
+    console.log(scene)
     this.scene = scene
     scene.on('loaded', async function() {
         let kakou = await self.getKakous()
@@ -110,7 +117,9 @@ class MyMap extends Component {
         }, j*t )
     }
   }
-
+  switchTheme(theme){
+    this.scene.setMapStyle(theme)
+  }
   FlyToCenter(lon,lat){
     this.scene.panTo([lon,lat])
   }

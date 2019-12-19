@@ -27,7 +27,7 @@ function generateRandomData(){
   for(let i=carTypes.length-1; i >= 0;i--){
      let value
      if(i != 0){
-        value = Math.random() * 50
+        value = Math.ceil(Math.random() * 50)
         last -= value
      }else{
         value = last
@@ -44,7 +44,7 @@ function generateRandomData(){
 
 const cols = {
   percent: {
-    formatter: val => (val = `${val * 100}%`),
+    formatter: val => (val = `${val}%`),
   },
 };
 class FlowWidget extends React.Component {
@@ -104,7 +104,7 @@ class FlowWidget extends React.Component {
             tooltip={[
               'type*percent',
               (item, percent) => {
-                percent = `${percent * 100}%`;
+                percent = `${percent}%`;
                 return {
                   name: item,
                   value: percent,

@@ -22,12 +22,13 @@ import { Divider } from 'antd';
 
 function generateRandomData(){
   const data = []
-  for(let t=0;t<2;t++){
+  const carTypes = ['私家车','客车','货车']
+  for(let t=2;t>=0;t--){
     for(let i=0;i<24;i++){
     data.push({
        'hour' : ''+i,
        'amount' : Math.ceil(Math.random()*1000),
-       'type' : ''+t
+       'type' : carTypes[t]
       })
     }
   }
