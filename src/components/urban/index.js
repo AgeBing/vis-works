@@ -23,7 +23,9 @@ class Urban extends React.Component {
         {
           'name': 'flow',
           'visible': true,
-          'alias': '轨迹流图'
+          'alias': '轨迹流图',
+          // 'color':'#70C9EB'
+          'style':{color: '#70C9EB'}
         },
         {
           'name': 'context',
@@ -117,7 +119,7 @@ class Urban extends React.Component {
             return(
               <div className='control-row'>
                 <div className='control-label'>{vObj['alias']}</div>
-                <Switch  checked={vObj['visible']} onClick={this.handleLayerVisibleSwitch.bind(this,vObj['name'])} />
+                <Switch  checked={vObj['visible']}  style ={vObj['style']} onClick={this.handleLayerVisibleSwitch.bind(this,vObj['name'])} />
               </div>
             )
           })}
