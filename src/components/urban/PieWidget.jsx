@@ -100,7 +100,7 @@ class FlowWidget extends React.Component {
           <Geom
             type="intervalStack"
             position="percent"
-            color="type"
+            color={["type", ["#FF5900","#F58A00","#FFB703"]]}
             tooltip={[
               'type*percent',
               (item, percent) => {

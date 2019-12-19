@@ -69,7 +69,7 @@ class FlowWidget extends React.Component {
             type="line"
             position="hour*amount"
             size={2}
-            color="type"
+            color={["type", ["#FF5900","#F58A00","#FFB703"]]}
             shape={"smooth"}
             animate={{
                 appear: {

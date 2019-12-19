@@ -48,6 +48,7 @@ class MyMap extends Component {
       center:[114.50175901191922, 38.04101919751572],
       pitch: 85,
       zoom:17.1,
+      // zoom:13.2,
       zoomControl: false,
       scaleControl: false,
       attributionControl: false
@@ -208,11 +209,11 @@ class MyMap extends Component {
       })
       .shape('circle')
       // .shape('name', 'text')
-      .size(5) 
+      .size(3) 
       .active(true)
-      .color('#ffc53d')
+      .color('#FF7A45')
       .style({
-        opacity: 0.8,
+        opacity: 0.9,
         strokeWidth: 0
       })
       .hide()
@@ -243,7 +244,7 @@ class MyMap extends Component {
       })
       .shape('line')
       .size(1)
-      .color('#096dd9')
+      .color('#FF7A45')
       .style({
         opacity: 0.85,
       })
@@ -324,14 +325,14 @@ class MyMap extends Component {
       .shape('circle')
       .size('abs',[this.scene.getZoom()/3,this.scene.getZoom()]) 
       .active(true)
-      .color('inOrOut',['#ff0000','#0000ff'])
+      .color('inOrOut',['#70C9EB','#FFBD90'])
       .style({
-        opacity: 0.5,// 建立透明度映射
+        opacity: 0.95,// 建立透明度映射
         strokeWidth: 0
       })
       .hide()
       .render();
-    cl.setHeight(10);
+    cl.setHeight(200);
 
     /*
       画 线
@@ -350,9 +351,9 @@ class MyMap extends Component {
     })
     .shape('line')
     .size(2)
-    .color('#ffffff')
+    .color('inOrOut',['#70C9EB','#FFBD90'])
     .style({
-      opacity: 1,
+      opacity: 0.7,
     })
     .hide()
     .render()
@@ -511,6 +512,7 @@ class MyMap extends Component {
         "lat1":Features[recId].geo[1],
         "lng2":newLon,
         "lat2":newLat,
+        "inOrOut":nInOrOut,
       }
       numId++;
     }
