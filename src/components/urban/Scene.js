@@ -25,18 +25,22 @@ class MyMap extends Component {
 
     if (this.props.hour !== nextProps.hour && this.props.hour ){
         let hour = nextProps.hour
-        console.log('render' , hour)
-        this.drawLinesUpdate(this.state.trajs[hour])
+        // this.drawLinesUpdate(this.state.trajs[hour])
+        this.updateDate(hour)
     }
 
     // 用户选择的卡口更新
     if (nextProps.selectedKakou && this.props.selectedKakou.id !==  nextProps.selectedKakou.id){
-        console.log('update' , nextProps.selectedKakou)
         let kakou = nextProps.selectedKakou
         this.FlyToCenter( kakou.lng , kakou.lat )
     }
 
     this.switchVisibility(nextProps.visbilities)
+
+    if( nextProps.pitchMode !== this.props.pitchMode ){
+
+      this.switchPitchMode(nextProps.pitchMode)
+    }
   }
   async createInstance(){
     let self = this
@@ -46,7 +50,7 @@ class MyMap extends Component {
       mapStyle: 'light',
       // center: [114.5082664490,38.0413316426],
       center:[114.50175901191922, 38.04101919751572],
-      pitch: 85,
+      // pitch: 85,
       zoom:17.1,
       zoomControl: false,
       scaleControl: false,
@@ -58,18 +62,54 @@ class MyMap extends Component {
         let trajs = await self.getTrajs(kakou.map)
         self.setState({ trajs })
 
+        let heatLayer = self.createHeatLayer( kakou.arr )
         let flowLayer = self.createFlowLayer(kakou.arr , trajs[0] )
-
         let cData =  await self.calData(trajs);
         let contextLayer =  self.createContextLayer( cData.recData , cData.circleData ,cData.lineData )
+
         let layers = {
             'flow' : flowLayer,
-            'context': contextLayer
+            'context': contextLayer,
+            'heat' : heatLayer
           }
         self.setState({ layers })
+        
         self.switchVisibility(self.props.visbilities , { layers } )
+        self.switchPitchMode(self.props.pitchMode)
     })
   }
+  switchPitchMode(mode){
+    let self = this
+    let cur = this.scene.getPitch(),
+        target 
+
+    if(mode == '2D'){
+        target = 0
+    }else{
+        target = 85
+    }
+
+    let low,high
+    if(cur >= target){
+        high = cur
+        low  = target
+    }else{
+        high = target
+        low  = cur 
+    }
+    // 做一个动画 ，中间做个过渡，不是一下子变过去
+    let t = 5,
+        a = (target - cur)/Math.abs(target - cur)
+
+    for(let i = low ; i <= high;i++){
+        let j = i - low
+
+        setTimeout(()=>{
+          self.scene.setPitch( cur + a * j )
+        }, j*t )
+    }
+  }
+
   FlyToCenter(lon,lat){
     this.scene.panTo([lon,lat])
   }
@@ -105,8 +145,33 @@ class MyMap extends Component {
             layers['context']['ll'].hide()
           }
           break
+
+        case 'heat':
+          if(visible){
+            layers['heat']['hl'].show()
+          }else{
+            layers['heat']['hl'].hide()
+          }
+          break
        }
     })
+
+  }
+  /*
+    更新各图层的数据
+  */
+  updateDate( hour ){
+    let { layers,trajs } = this.state
+
+    layers['flow']['ll'].setData(trajs[hour] , {
+        parser: {
+          type:'json',
+          x: 'lng1',
+          y: 'lat1',
+          x1: 'lng2',
+          y1: 'lat2'
+        }
+      })
 
   }
   /*
@@ -150,7 +215,7 @@ class MyMap extends Component {
   */
   async getTrajs(kakouMap){
     let ps = []
-    for(let i = 1;i < 2;i++){
+    for(let i = 1;i < 15;i++){
         let p = new Promise((resolve,reject)=>{
 
                     let trajUrl = trajsUrlBase + "t_df_" + i + ".csv"
@@ -170,7 +235,7 @@ class MyMap extends Component {
                           })
                         }
                       })  
-                      console.log(trajs.length)
+                      console.log('traj data', i , trajs.length)
                       resolve( trajs )
                     })
                 })
@@ -299,11 +364,11 @@ class MyMap extends Component {
       let info = "总体的车流量为:" + ev.feature.sum +"  流入:"+ev.feature.in+"   流出:" + ev.feature.out; 
       popup.setText(info);
       popup.addTo(self.scene);
-      console.log("mouseover",info,ev);
+      // console.log("mouseover",info,ev);
     });
     rl.on('mouseout', (ev)=>{
       popup.remove();
-      console.log("mouseout",ev);
+      // console.log("mouseout",ev);
     }); 
 
 
@@ -360,6 +425,41 @@ class MyMap extends Component {
 
     return {rl,cl,ll}
   }
+
+  /***********************************
+  *          Context视图
+  ************************************/
+  createHeatLayer(points){
+
+    points.map((p)=>{
+       p['mag'] = Math.random()*1000
+    })
+
+    let hl = this.scene.HeatmapLayer({
+          zIndex: 9
+        })
+        .source(points,{
+          parser:{
+              type:'json',
+              x : 'lng',
+              y : 'lat',
+              mag: 'mag',
+          },
+        })
+        .size('mag', [0, 1.0]) // weight映射通道
+        .style({
+          intensity: 2,
+          radius: 100,
+          opacity: 0.5,
+          rampColors: {
+            colors: ['#2E8AE6', '#69D1AB', '#DAF291', '#FFD591', '#FF7A45', '#CF1D49'],
+            positions: [0, 0.2, 0.4, 0.6, 0.8, 1.0]
+          }
+        }).render();
+
+      return {hl}
+  }
+
   calData(trajs){
     let Features = [];
     let recIds = new Set();
@@ -436,8 +536,6 @@ class MyMap extends Component {
       }
     }
     // 遍历矩形编号，计算矩形的主要方向，生成绘制的数据
-    
-    // console.log("Features",Features);
     let recData = [];
     let circleData = [];
     let lineData = [];

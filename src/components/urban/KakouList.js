@@ -21,6 +21,38 @@ function colorScale(v) {
   }
 }
 
+function geneRandom(kakous){
+  let data = [] ,len = kakous.length;
+
+  let initAmount = 1000
+
+  for(let i = 0;i < 100;i++){
+
+    let j = Math.ceil(Math.random()*len) - 1
+    j =  (j > len || j < 0) ? 0 : j
+    let _kakou = kakous[j]
+
+    data.push({
+      name : _kakou['name'],
+      value: initAmount,
+      color: colorScale(initAmount),
+      id : _kakou['id']
+    })
+
+    let decrese = Math.ceil(Math.random()*50)
+    if(initAmount >= 50){
+      initAmount -= decrese
+    }
+  }
+  const config = {
+       rowNum:10,
+       data,
+       carousel: 'page',
+       waitTime: 5000,  //刷新时间
+  }
+  return config
+}
+
 class KakouWidgets extends React.Component {
   
   constructor(props){
@@ -32,40 +64,19 @@ class KakouWidgets extends React.Component {
 
     let kakou = await this.getKakous()
 
-    let data = [] ,len = kakou.arr.length;
+    this.setState({ kakous:kakou.arr })
 
-    let initAmount = 1000
+    let config = geneRandom( kakou.arr )
 
-    for(let i = 0;i < 100;i++){
-
-      let j = Math.ceil(Math.random()*len) - 1
-      j =  (j > len || j < 0) ? 0 : j
-      let _kakou = kakou.arr[j]
-
-      data.push({
-        name : _kakou['name'],
-        value: initAmount,
-        color: colorScale(initAmount),
-        id : _kakou['id']
-      })
-
-      let decrese = Math.ceil(Math.random()*10)
-      if(initAmount >= 50){
-        initAmount -= decrese
-      }
-    }
-    console.log(data)
-
-    const config = {
-         rowNum:10,
-         data,
-         carousel: 'page',
-         waitTime: 5000,  //刷新时间
-    }
     this.setState({
       config
     })
 
+  }
+  componentWillReceiveProps(nextProps) {
+    let { kakous } = this.state
+    let config = geneRandom(kakous)
+    this.setState({ config })
   }
   async getKakous(){
     let self = this
@@ -106,15 +117,15 @@ class KakouWidgets extends React.Component {
     this.props.selectKakouFunc(kakou)
   }
   render(){
-  return (
-      <div style={{width: '100%', height: '90%'}}>       
-        <Divider orientation="left"> 各路口流量情况 </Divider>
-        <ScrollRankingBoard 
-          clickFunc={this.clickFunc.bind(this)}
-          config={this.state.config}  style={{width: '100%', height: 'calc(100% - 67px)'}} />
-      </div>
-    )
-  }
+    return (
+        <div style={{width: '100%', height: '90%'}}>       
+          <Divider orientation="left"> 各路口流量情况 </Divider>
+          <ScrollRankingBoard 
+            clickFunc={this.clickFunc.bind(this)}
+            config={this.state.config}  style={{width: '100%', height: 'calc(100% - 67px)'}} />
+        </div>
+      )
+    }
 }
 
 export default KakouWidgets;

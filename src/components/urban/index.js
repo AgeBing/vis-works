@@ -18,7 +18,7 @@ class Urban extends React.Component {
     this.state = {
       showDetail : false,
       selectedKakou: {},
-      drawerVisible: true,
+      drawerVisible: false,  //控制面板显示
       visbilities:[
         {
           'name': 'flow',
@@ -29,8 +29,15 @@ class Urban extends React.Component {
           'name': 'context',
           'visible': false,
           'alias': '卡口区域图'
+        },
+        {
+          'name': 'heat',
+          'visible': false,
+          'alias': '热力图'
         }
-      ]
+      ],
+      pitchMode : '3D',
+      mapTime : 6
     }
   }
 
@@ -38,7 +45,6 @@ class Urban extends React.Component {
 
   }
   handleUpdateMapTime(h){
-    console.log("map time",h)
     this.setState({ mapTime:h })
   }
   hanleShowKakouDetaile(kakou){
@@ -70,6 +76,13 @@ class Urban extends React.Component {
     })
     this.setState({ visbilities })
   }
+  handleChangeMapPitch(){
+    let { pitchMode }= this.state
+
+    pitchMode =  pitchMode == '2D' ? '3D' : '2D'
+
+    this.setState({ pitchMode })
+  }
   render(){
     return (
       <div className="urban-app">       
@@ -78,24 +91,22 @@ class Urban extends React.Component {
           seletcKakou = {this.hanleShowKakouDetaile.bind(this)}
           selectedKakou={this.state.selectedKakou}
           visbilities={this.state.visbilities}
+          pitchMode={this.state.pitchMode}
         >
         </MyMap>
-
-        {/*<div className='widget-time'>*/}
-          {/*<Widgets updateMapTime={this.handleUpdateMapTime.bind(this)} ></Widgets>*/}
-          {/*<Widgets/>*/}
-        {/*</div>*/}
 
         <div className='widget'>
         { this.state.showDetail ?
           ( <KakouDetail kakou={this.state.selectedKakou} returnFunc={this.hanleShowKakouOverView.bind(this)}/> ):
           ( 
             <div style={{width: '100%', height: '100%'}}>
-              <KakouList selectKakouFunc={this.hanleShowKakouDetaile.bind(this)}/>
+              <KakouList 
+                hour={this.state.mapTime}
+                selectKakouFunc={this.hanleShowKakouDetaile.bind(this)}/>
               <div className="config-btn-contain">
                 <Button shape="circle" icon="setting" onClick={this.showConfigPanel.bind(this)}/>
-                <Button shape="circle" icon="home"/>
-                <Button shape="circle" icon="home"/>
+                <Button shape="circle" icon="eye"/>
+                <Button shape="circle" style={{ 'fontSize':'24px'}} onClick={this.handleChangeMapPitch.bind(this)}> {this.state.pitchMode} </Button>
               </div>
             </div>
           )
@@ -123,7 +134,7 @@ class Urban extends React.Component {
           })}
           <Divider orientation="left"> 时间选择 </Divider>
           <div className='control-row'>
-            <TimeWidget />
+            <TimeWidget  updateMapTime={this.handleUpdateMapTime.bind(this)} />
           </div>
           </Drawer>
 

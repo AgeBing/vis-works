@@ -52,15 +52,18 @@ const marks = {
   0 : '0:00',
   6 : '6:00',
   12: '12:00',
-  18: '18:00',
-  24: '24:00',
+  // 18: '18:00',
+  // 24: '24:00',
 }
+
+
+const debounceWait = 1000
 
 class IntegerStep extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      hour : 1,
+      hour : 6,
       start: false,
       startId : 0
     }
@@ -71,11 +74,15 @@ class IntegerStep extends React.Component {
   }
 
   onChange = value => {
+    let self = this
     this.setState({
       hour: value,
     })
 
-    // this.props.updateMapTime(value)
+    clearTimeout(this.timerId)        
+    this.timerId = setTimeout(function() {            
+      self.props.updateMapTime(value)
+    }, debounceWait)
   };
 
   // 跟新时间 
@@ -110,7 +117,7 @@ class IntegerStep extends React.Component {
             vertical
             reverse
             min={0}
-            max={24}
+            max={15}
             marks={marks}
             onChange={this.onChange}
             value={typeof hour === 'number' ? hour : 2}
