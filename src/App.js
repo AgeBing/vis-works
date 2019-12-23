@@ -10,6 +10,7 @@ import  Board from './components/board/index'
 import  Urban from './components/urban/index'
 import  Traffic from './components/traffic/index'
 import  Explorer from './components/explorer/index'
+import  Zjgdp  from './components/gdp/index'
 
 class App extends React.Component {
   
@@ -22,7 +23,6 @@ class App extends React.Component {
   }
 
   componentWillMount(){
-  
   }
 
   render(){
@@ -47,6 +47,7 @@ class App extends React.Component {
                 <Route path='/fire' exact component={Fire}></Route>
                 <Route path='/traffic' exact component={Traffic}></Route>
                 <Route path='/explore' exact component={Explorer}></Route>
+                <Route path='/gdp' exact component={Zjgdp}></Route>
             </Switch>
         </BrowserRouter>
     </div>

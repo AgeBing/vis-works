@@ -4,6 +4,8 @@ import { Card, Col, Row,Button } from 'antd';
 import './index.css';
 import fireImg from '../../image/snapshots/fire.png'
 import urabnImg from '../../image/snapshots/urban.png'
+import gdpImg from '../../image/snapshots/gdp.png'
+
 
 
 class Board extends React.Component {
@@ -53,6 +55,18 @@ class Board extends React.Component {
           <Card.Meta 
             title="城市可视化" 
             description="使用 @antv/L7 进行展示" />
+        </Card>
+      </Col>
+
+      <Col span={8}>
+        <Card  
+          hoverable
+          cover={<img alt="example" src={gdpImg} style={coverStyle}/>}
+          onClick={this.redirectTo.bind(this,'/gdp')}
+        >
+          <Card.Meta 
+            title="宏观经济可视化" 
+            description="展现浙江省及宁波市宏观经济情况" />
         </Card>
       </Col>
 
