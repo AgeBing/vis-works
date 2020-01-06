@@ -23,10 +23,25 @@ class MyMap extends Component {
   }
   componentWillReceiveProps(nextProps) {
 
-    if (this.props.hour !== nextProps.hour && this.props.hour ){
-        let hour = nextProps.hour
-        console.log('render' , hour)
-        this.drawLinesUpdate(this.state.trajs[hour])
+    // if (this.props.hour !== nextProps.hour && this.props.hour ){
+    //     let hour = nextProps.hour
+    //     console.log('render' , hour)
+    //     this.drawLinesUpdate(this.state.trajs[hour])
+    // }
+
+    if(nextProps.inputData  &&  this.props.inputData['timeStamp'] !== nextProps.inputData['timeStamp'] ){
+      // this.drawLinesUpdate( inputData['lines'] )
+      console.log( nextProps.inputData )
+      let lines = nextProps.inputData['lines']
+      lines = lines.map((l)=>{
+          return {
+            'lng1' : +l['lng1'],
+            'lat1' : +l['lat1'],
+            'lng2' : +l['lng2'],
+            'lat2' : +l['lat2'],
+          }
+      })
+      this.drawLinesUpdate( lines )
     }
   }
   async createInstance(){
@@ -37,9 +52,9 @@ class MyMap extends Component {
       mapStyle: 'light',
       center: [114.5082664490,38.0413316426],
       // center: [120.19382669582967, 30.258134],
-      pitch: 60,
-      // zoom: 13.2,
-      zoom: 13.8,
+      // pitch: 60,
+      zoom: 12,
+      // zoom: 13.8,
       zoomControl: false,
       scaleControl: false,
       attributionControl: false
@@ -47,100 +62,6 @@ class MyMap extends Component {
     this.scene = scene
     scene.on('loaded', async function() {
     })
-  }
-  async getKakous(){
-    return new Promise((resolve,reject)=>{
-        d3.csv(kakouCsvUrl).then((data)=>{
-          let kakous = []
-          let ids = new Set()
-          let kakouMap = new Map()
-          // data = data.slice(0,20)
-          data.map((row)=>{
-              if(row['location'] == '二环内'){
-                  let id = row['I_ID'],
-                      lng =  +row['longitude'],
-                      lat =  +row['latitude']
-                  if(!ids.has(id)){
-                    kakous.push({
-                        id , lng , lat,
-                        name : id
-                    })
-                    // kakous.push({
-                    //   "type": "Feature",
-                    //   "geometry": {
-                    //     "type": "Point",
-                    //     "coordinates": [lng, lat]
-                    //   },
-                    //   "properties": {
-                    //       "name": id
-                    //   }
-                    // })
-                    kakouMap.set(id , { lng ,lat })
-                  }
-                  ids.add(row['I_ID'])
-              }
-          })  
-          console.log(kakous.length)
-          // kakous = {
-          //   "type": "FeatureCollection",
-          //   "features": kakous
-          // }
-          resolve( { arr:kakous,map:kakouMap }  )
-        })
-    })
-  }
-  drawPoints(points){
-      let self = this
-      let pl = self.scene.PointLayer({
-          zIndex: 2
-      })
-      .source(points,{
-        parser:{
-            type:'json',
-            x : 'lng',
-            y : 'lat',
-            name: 'name',
-        },
-      })
-      .shape('circle')
-      // .shape('name', 'text')
-      .size(1) 
-      .active(true)
-      .color('#FFBD90')
-      .style({
-        opacity: 0.9,
-        strokeWidth: 0
-      })
-      .render();
-      pl.setHeight(10)
-
-      // pl.on('click', (ev)=>{
-      //   console.log(ev)
-      // });
-  }
-  prepareLineLayer(){
-    let self = this
-
-    let ll = self.scene.LineLayer({
-      zIndex: 3
-    })
-    .shape('line')
-    .size(2.5)
-    .color('#722ed1')
-    .style({
-      opacity: 0.85,
-    })
-    .animate({
-      enable:true, // 开启动画
-      interval:0.2, //  0-1 轨迹间隔 
-      duration:2, // 动画时间
-      trailLength:0.4, // 轨迹长度 0-1
-    })
-    .render()
-    console.log(ll)
-
-    return ll 
-      // .render();
   }
   drawLinesUpdate(lines){
     let ll 
@@ -164,17 +85,16 @@ class MyMap extends Component {
       .style({
         opacity: 0.85,
       })
-      .animate({
-        enable:true, // 开启动画
-        interval:0.2, //  0-1 轨迹间隔 
-        duration:2, // 动画时间
-        trailLength:0.4, // 轨迹长度 0-1
-      })
+      // .animate({
+      //   enable:true, // 开启动画
+      //   interval:0.2, //  0-1 轨迹间隔 
+      //   duration:2, // 动画时间
+      //   trailLength:0.4, // 轨迹长度 0-1
+      // })
       .render()
 
       self.trajsLayer = ll
     }else{
-      console.log(lines.length)
       ll = self.trajsLayer
       ll.setData(lines, {
         parser: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom'
-import './index.css';
+import '../index.css';
 
 import {
   G2,

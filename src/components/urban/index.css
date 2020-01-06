@@ -103,3 +103,16 @@
 	height: 30px;
     margin-top: -6px;
 }
+
+.detail-app{
+	padding-top: 57px;
+}
+.detail-app .control-row{
+	padding: 0 70px;
+}
+.control-row-center{
+	display: flex;
+	justify-content: center;
+	height: 58px;
+	align-items: center;
+}

@@ -8,15 +8,24 @@ const { Dragger } = Upload;
 class MyUpload extends React.Component {
 
   handleFileChange(info){
-    console.log(info)
-    let csvfile = info.file.originFileObj
-    Papa.parse(csvfile, {
-      complete: (result) => {
-        var data = result.data;
-        console.log(data);
-      },
-      header: true
-    })
+    let self = this
+    const { status } = info.file;
+    if (status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (status === 'done' || status === 'error') {
+
+      let csvfile = info.file.originFileObj
+      Papa.parse(csvfile, {
+        complete: (result) => {
+          var data = result.data;
+          console.log('complete',data);
+          self.props.onUpload(data)
+        },
+        header: true
+      })
+
+    }
   }
   render(){
     return(

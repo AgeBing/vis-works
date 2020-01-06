@@ -7,7 +7,6 @@ import urabnImg from '../../image/snapshots/urban.png'
 import gdpImg from '../../image/snapshots/gdp.png'
 
 
-
 class Board extends React.Component {
   
   constructor(props){

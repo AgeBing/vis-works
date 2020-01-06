@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import './index.css';
 
-import  FlowWidget  from  './FlowWidget'
-import  PieWidget  from  './PieWidget'
+import  FlowWidget  from  './charts/FlowWidget'
+import  PieWidget  from  './charts/PieWidget'
 
 import { Divider,Button,Descriptions } from 'antd';
 

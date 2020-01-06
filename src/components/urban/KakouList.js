@@ -7,9 +7,11 @@ import { ScrollRankingBoard } from '../../dep/@jiaminghi/data-view-react/src/ind
 import { Divider,Button } from 'antd';
 
 
-const kakouCsvUrl = "http://q1vcletmu.bkt.clouddn.com/kakou.csv"
 
+// const qiniuDomain =  'http://localhost:3001/'
+const qiniuDomain = '/'
 
+const kakouCsvUrl = qiniuDomain  + "kakou.csv"
 
 function colorScale(v) {
   if( v > 800){
