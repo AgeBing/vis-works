@@ -426,7 +426,6 @@ async function getTrajs(kakouMap){
                         })
                       }
                     })  
-                    console.log('traj data', i , trajs.length)
                     resolve( trajs )
                   })
               })

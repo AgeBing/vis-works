@@ -1,6 +1,3 @@
-数据可视化展示，使用
+数据可视化展示
 
-- `create-react-app`
-- `antd`
-- `antv g2` 、`bizcharts`
-- `antv l7`
+数据 : 需要在 `/data` 下起一个 `http://localhost:3001 `
